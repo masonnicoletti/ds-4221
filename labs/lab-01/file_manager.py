@@ -83,33 +83,29 @@ class Page:
 
     def get_int(self, offset: int) -> int:
         """Read the 4-byte little-endian int stored at `offset`."""
-        # TODO: struct.unpack_from is your friend.
-        raise NotImplementedError
+        return struct.unpack_from('<i', self._data, offset)[0]
 
     def set_int(self, offset: int, val: int) -> None:
         """Write `val` as a 4-byte little-endian int at `offset`."""
-        # TODO: struct.pack_into is your friend.
-        raise NotImplementedError
+        struct.pack_into('<i', self._data, offset, val)
 
     def get_bytes(self, offset: int) -> bytes:
         """Read the length-prefixed byte string stored at `offset`."""
-        # TODO: read the 4-byte length first, then that many raw bytes.
-        raise NotImplementedError
+        length = self.get_int(offset)
+        return self._data[offset + 4:offset + 4 + length]
 
     def set_bytes(self, offset: int, data: bytes) -> None:
         """Write `data` at `offset` as a 4-byte length followed by the bytes."""
-        # TODO: length prefix, then the payload.
-        raise NotImplementedError
+        self.set_int(offset, len(data))
+        self._data[offset + 4:offset + 4 + len(data)] = data
 
     def get_string(self, offset: int) -> str:
         """Read the UTF-8 string stored at `offset`."""
-        # TODO: one line once get_bytes works.
-        raise NotImplementedError
+        return self.get_bytes(offset).decode('utf-8')
 
     def set_string(self, offset: int, s: str) -> None:
         """Write `s` at `offset`: UTF-8 encode, then store like bytes."""
-        # TODO: one line once set_bytes works.
-        raise NotImplementedError
+        self.set_bytes(offset, s.encode('uft-8'))
 
     # ---------------- YOUR JOB ends here. ----------------
 
@@ -168,7 +164,12 @@ class FileManager:
         #      raises on a perfectly good read.
         #   3. f.read(n) takes a byte COUNT, not a buffer. To fill the
         #      buffer the page already owns, use f.readinto(page.contents()).
-        raise NotImplementedError
+        if block.blknum >= self.length(block.filename):
+            raise ValueError(f"Block {block} fails bounds check")
+        f = self._file(block.filename)
+        f.seek(block.blknum * self.block_size)
+        f.readinto(page.contents())
+        
 
     def write(self, block: BlockId, page: Page, sync: bool = True) -> None:
         """Write `page` to `block` on disk.
@@ -177,7 +178,12 @@ class FileManager:
         returning (flush + os.fsync). This is the expensive promise you
         will measure in Part 3."""
         # TODO: seek, write page.contents(), flush, and fsync when sync.
-        raise NotImplementedError
+        f = self._file(block.filename)
+        f.seek(block.blknum * self.block_size)
+        f.write(page.contents())
+        f.flush()
+        if sync:
+            os.fsync(f.fileno())
 
     def append(self, filename: str) -> BlockId:
         """Grow `filename` by one zeroed block; return the new block's BlockId."""
@@ -186,13 +192,19 @@ class FileManager:
         #       block_size zero bytes (bytes(self.block_size)), and flush.
         #       Returning a BlockId by itself changes nothing on disk, and
         #       length() will still say 0.
-        raise NotImplementedError
+        f = self._file(filename)
+        f.seek(0, 2)
+        f.write(bytes(self.block_size))
+        f.flush()
+        return BlockId(filename, f.tell()) // self.block_size
 
     def length(self, filename: str) -> int:
         """How many whole blocks `filename` currently holds."""
         # TODO: file size in bytes // block_size. os.fstat of the open
         #       file (or f.seek(0, 2); f.tell()) gives the size.
-        raise NotImplementedError
+        f = self._file(filename)
+        f.seek(0, 2)
+        return f.tell() // self.block_size
 
     # ---------------- YOUR JOB ends here. ----------------
 
