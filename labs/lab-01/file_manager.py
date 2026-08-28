@@ -105,7 +105,7 @@ class Page:
 
     def set_string(self, offset: int, s: str) -> None:
         """Write `s` at `offset`: UTF-8 encode, then store like bytes."""
-        self.set_bytes(offset, s.encode('uft-8'))
+        self.set_bytes(offset, s.encode('utf-8'))
 
     # ---------------- YOUR JOB ends here. ----------------
 
@@ -192,11 +192,12 @@ class FileManager:
         #       block_size zero bytes (bytes(self.block_size)), and flush.
         #       Returning a BlockId by itself changes nothing on disk, and
         #       length() will still say 0.
+        block_num = self.length(filename)
         f = self._file(filename)
         f.seek(0, 2)
         f.write(bytes(self.block_size))
         f.flush()
-        return BlockId(filename, f.tell()) // self.block_size
+        return BlockId(filename, block_num)
 
     def length(self, filename: str) -> int:
         """How many whole blocks `filename` currently holds."""
