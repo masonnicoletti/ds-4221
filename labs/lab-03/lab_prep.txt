@@ -1,0 +1,11 @@
+Lab 03 Prep
+
+Slot Layout:
+course(dept varchar(4), num int, credits int)
+
+Bytes = 20 B
+    Flag      | 4
+    Len(dept) | 4
+    dept      | 4
+    num       | 4
+    credits   | 4
