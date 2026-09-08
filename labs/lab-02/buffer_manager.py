@@ -99,13 +99,19 @@ class BufferManager:
     def _find_existing(self, block: BlockId):
         """Return the Buffer already holding `block`, or None."""
         # TODO: scan self.pool comparing buffer.block to block.
-        raise NotImplementedError
-
+        for buffer in self.pool:
+            if buffer.block == block:
+                return buffer
+        return None
+    
     def _choose_victim(self):
         """Return the unpinned Buffer with the smallest last_used,
         or None if every frame is pinned."""
         # TODO: filter unpinned frames; min() by last_used.
-        raise NotImplementedError
+        unpinned = [buffer for buffer in self.pool if not buffer.is_pinned()]
+        if unpinned:
+            return min(unpinned, key=lambda x: x.last_used)
+        return None
 
     def pin(self, block: BlockId) -> Buffer:
         """Make `block` resident and pinned; return its Buffer.
@@ -117,13 +123,30 @@ class BufferManager:
         fresh tick (increment self._tick first, then assign it)."""
         # TODO: implement exactly the spec above — the tests check the
         #       hit/miss counters and the LRU order.
-        raise NotImplementedError
+        self._tick += 1
+        buffer = self._find_existing(block)
+        if buffer is not None:
+            self.hits += 1
+        else:
+            buffer = self._choose_victim()
+            if buffer is None:
+                raise BufferAbortError("All buffers are pinned")
+            self.misses += 1
+            buffer.assign_to_block(block)
+        buffer.pins += 1
+        buffer.last_used = self._tick
+        return buffer
+        
 
     def unpin(self, buf: Buffer) -> None:
         """Release one pin on `buf`. Raise ValueError if pins is already 0
         (that's always a caller bug worth catching loudly)."""
         # TODO
-        raise NotImplementedError
+        if buf.pins > 0:
+            buf.pins -= 1
+        else:
+            raise ValueError("Buffer is not pinned")
+        
 
     # ---------------- YOUR JOB ends here. ----------------
 
