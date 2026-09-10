@@ -5,7 +5,12 @@ course(dept varchar(4), num int, credits int)
 
 Bytes = 20 B
     Flag      | 4
-    Len(dept) | 4
+    len(dept) | 4
     dept      | 4
     num       | 4
     credits   | 4
+
+
+Discussion
+1. The wasted bites in the wide schema are spent in bio, the varchar that stores 200 characters.
+2. 62.5% of ada's slot is air (3/8 bytes used)

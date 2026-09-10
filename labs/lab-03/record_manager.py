@@ -70,12 +70,15 @@ class Layout:
         self.schema = schema
         self._offsets: dict[str, int] = {}
         self.slot_size = 0
-        # ---------------- YOUR JOB starts here. ----------------
-        # Walk schema.fields() in order. The flag takes bytes [0, 4), so
-        # the first field starts at offset 4. An int takes 4 bytes; a
-        # varchar(n) takes 4 + n. Fill self._offsets[name] for every field
-        # and leave self.slot_size = 4 + total field bytes.
-        raise NotImplementedError
+        position = 4
+        for field in schema.fields():
+            self._offsets[field] = position
+            if schema.type_of(field) == INT:
+                position += 4
+            elif schema.type_of(field) == STR:
+                position += 4 + schema.length_of(field)
+        self.slot_size = position
+
         # ---------------- YOUR JOB ends here. ----------------
 
     @classmethod
@@ -123,42 +126,54 @@ class RecordPage:
 
     def _field_pos(self, slot: int, fldname: str) -> int:
         """Absolute byte position of `fldname` inside `slot`."""
-        # TODO: slot start + the field's offset from the layout.
-        raise NotImplementedError
+        # The field's position is the start of the slot + that field's offset
+        return slot * self.layout.slot_size + self.layout.offset(fldname)
 
     def get_int(self, slot: int, fldname: str) -> int:
-        # TODO: read through self._buf.contents() at _field_pos.
-        raise NotImplementedError
+        pos = self._field_pos(slot, fldname)
+        return self._buf.contents().get_int(pos)
 
     def set_int(self, slot: int, fldname: str, val: int) -> None:
-        # TODO: write, then self._buf.set_modified() — the pool must know.
-        raise NotImplementedError
+        pos = self._field_pos(slot, fldname)
+        self._buf.contents().set_int(pos, val)
+        self._buf.set_modified()
 
     def get_string(self, slot: int, fldname: str) -> str:
-        # TODO
-        raise NotImplementedError
+        pos = self._field_pos(slot, fldname)
+        return self._buf.contents().get_string(pos)
 
     def set_string(self, slot: int, fldname: str, val: str) -> None:
-        # TODO: reject len(val.encode("utf-8")) > schema.length_of(fldname)
-        #       before writing, then write + set_modified.
-        raise NotImplementedError
+        # Reject if the encoded string is too long for the field
+        maxlen = self.layout.schema.length_of(fldname)
+        actual_len = len(val.encode("utf-8"))
+        if actual_len > maxlen:
+            raise ValueError(f"String too long for field '{fldname}': {actual_len} > {maxlen}")
+        pos = self._field_pos(slot, fldname)
+        self._buf.contents().set_string(pos, val)
+        self._buf.set_modified()
+ 
 
     def insert_after(self, slot: int) -> int:
         """Find the first EMPTY slot with index > `slot`, mark it USED,
         and return its index. Return -1 if this block has none."""
-        # TODO: scan slot+1 .. slot_count()-1.
-        raise NotImplementedError
+        for i in range(slot + 1, self.slot_count()):
+            if not self.is_used(i):
+                self._set_flag(i, USED)
+                return i
+        return -1
 
     def next_after(self, slot: int) -> int:
         """Find the first USED slot with index > `slot`; -1 if none.
         (insert_after's read-only twin — the scan's stepping stone.)"""
-        # TODO
-        raise NotImplementedError
+        for i in range(slot + 1, self.slot_count()):
+            if self.is_used(i):
+                return i
+        return -1
 
     def delete(self, slot: int) -> None:
         """Deletion is a bit flip: mark the slot EMPTY. Nothing moves."""
-        # TODO
-        raise NotImplementedError
+        self._set_flag(slot, EMPTY)
+
 
     # ---------------- YOUR JOB ends here. ----------------
 
@@ -225,7 +240,13 @@ class TableScan:
         While it says -1: if this is the last block, return False;
         otherwise move to the next block and ask again from slot -1."""
         # TODO
-        raise NotImplementedError
+        self.current_slot = self.rp.next_after(self.current_slot)
+        while self.current_slot < 0:
+            if self._at_last_block():
+                return False
+            self._move_to_block(self.rp.block.blknum + 1)
+            self.current_slot = self.rp.next_after(-1)
+        return True
 
     def insert(self) -> None:
         """Move to a fresh USED slot, extending the file if every block is
@@ -235,6 +256,13 @@ class TableScan:
         it says -1: move to the next block — or append a brand-new zeroed
         block if this was the last — and try again from slot -1."""
         # TODO
-        raise NotImplementedError
+        slot = self.rp.insert_after(self.current_slot)
+        while slot < 0:
+            if self._at_last_block():
+                self._append_new_block()
+            else:
+                self._move_to_block(self.rp.block.blknum + 1)
+            slot = self.rp.insert_after(-1)
+        self.current_slot = slot
 
     # ---------------- YOUR JOB ends here. ----------------
