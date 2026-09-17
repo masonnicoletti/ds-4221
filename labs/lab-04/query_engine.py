@@ -84,16 +84,26 @@ class SelectScan:
         predicate. False when the underlying scan runs out."""
         # TODO: loop scan.next(); return True on the first row where
         #       self.predicate.is_satisfied(self.scan).
-        raise NotImplementedError
+        while self.scan.next():
+            if self.predicate.is_satisfied(self.scan):
+                return True
+        return False
 
     # ---------------- YOUR JOB ends here. ----------------
 
     # Everything else passes straight through (selection changes which
     # rows appear, not what a row looks like).
-    def before_first(self) -> None: self.scan.before_first()
-    def get_val(self, fld): return self.scan.get_val(fld)
-    def has_field(self, fld) -> bool: return self.scan.has_field(fld)
-    def close(self) -> None: self.scan.close()
+    def before_first(self) -> None: 
+        self.scan.before_first()
+    
+    def get_val(self, fld): 
+        return self.scan.get_val(fld)
+    
+    def has_field(self, fld) -> bool: 
+        return self.scan.has_field(fld)
+    
+    def close(self) -> None: 
+        self.scan.close()
 
 
 class ProjectScan:
@@ -109,11 +119,13 @@ class ProjectScan:
         """Answer only for projected fields; otherwise raise ValueError
         (asking for a projected-away field is always a caller bug)."""
         # TODO
-        raise NotImplementedError
+        if not self.has_field(fld):
+            raise ValueError
+        return self.scan.get_val(fld)
 
     def has_field(self, fld) -> bool:
         # TODO: a field exists here only if the projection kept it.
-        raise NotImplementedError
+        return fld in self.fields
 
     # ---------------- YOUR JOB ends here. ----------------
 
@@ -143,7 +155,9 @@ class ProductScan:
         then one next()), right before its first. Store the result of left.next()
         in self._left_ready so next() knows whether a left row exists."""
         # TODO
-        raise NotImplementedError
+        self.left.before_first()
+        self.left.next()
+        self.right.before_first()
 
     def next(self) -> bool:
         """Advance right; when right runs out, rewind it and advance
@@ -151,16 +165,21 @@ class ProductScan:
         False if either input is empty, and set self._left_ready to False
         when exhausted until before_first() is called."""
         # TODO: handle empty inputs as well as the normal rollover.
-        raise NotImplementedError
+        if self.right.next():
+            return True
+        self.right.before_first()
+        return self.left.next() and self.right.next()
 
     def get_val(self, fld):
         """Ask whichever side has the field (left wins ties)."""
         # TODO: use has_field.
-        raise NotImplementedError
+        if self.left.has_field(fld):
+            return self.left.get_val(fld)
+        return self.right.get_val(fld)
 
     def has_field(self, fld) -> bool:
         # TODO: either side.
-        raise NotImplementedError
+        return self.left.has_field(fld) or self.right.has_field(fld)
 
     # ---------------- YOUR JOB ends here. ----------------
 
