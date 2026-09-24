@@ -4,14 +4,26 @@
 -- GPA is stored as an integer from 20 through 39; 35 represents 3.5.
 
 -- S1: Return every student's name.
+SELECT name FROM students;
 
 -- S2: Return the names of students with gpa > 35.
+SELECT name FROM students WHERE gpa > 35;
 
 -- S3: Return all student columns for exactly the same rows as S2.
+SELECT * FROM students WHERE gpa > 35;
 
 -- J1: Return name and dept for students with gpa > 35 in the 'ds' department.
 -- Join students.mid to majors.mid2; put students first in FROM.
+--SELECT students.name, majors.dept FROM students WHERE gpa > 35 AND dept = 'ds'
+--JOIN majors ON students.mid = majors.mid2;
+SELECT name, dept FROM students, majors WHERE gpa > 35 AND dept = 'ds';
 
 -- J2: Return the same fields and rows as J1, but put majors first in FROM.
+--SELECT students.name, majors.dept FROM majors WHERE gpa > 35 AND dept = 'ds'
+--JOIN students ON majors.mid2 = students.mid;
+SELECT name, dept FROM majors, students WHERE gpa > 35 AND dept = 'ds';
 
 -- J3: Use J1's table order and department, but require gpa > 38.
+--SELECT students.name, majors.dept FROM students WHERE gpa > 38 AND dept = 'ds'
+--JOIN majors ON students.mid = majors.mid2;
+SELECT name, dept FROM students, majors WHERE gpa > 38 AND dept = 'ds';
