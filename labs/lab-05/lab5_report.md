@@ -48,17 +48,18 @@ SELECT * FROM students WHERE gpa > 35;
 
 -- J1: Return name and dept for students with gpa > 35 in the 'ds' department.
 
--- Join students.mid to majors.mid2; put students first in FROM.
-
-SELECT name, dept FROM students, majors WHERE gpa > 35 AND dept = 'ds';
+SELECT name, dept FROM students, majors
+WHERE gpa > 35 AND dept = 'ds' AND mid = mid2;
 
 -- J2: Return the same fields and rows as J1, but put majors first in FROM.
 
-SELECT name, dept FROM majors, students WHERE gpa > 35 AND dept = 'ds';
+SELECT name, dept FROM majors, students
+WHERE gpa > 35 AND dept = 'ds' AND mid2 = mid;
 
 -- J3: Use J1's table order and department, but require gpa > 38.
 
-SELECT name, dept FROM students, majors WHERE gpa > 38 AND dept = 'ds';
+SELECT name, dept FROM students, majors
+WHERE gpa > 38 AND dept = 'ds' AND mid = mid2;
 
 ## 3. Predict before measuring
 
