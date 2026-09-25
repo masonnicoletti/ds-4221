@@ -19,15 +19,15 @@
           "predicate_comparisons": 0,
           "rows_returned": 600,
           "output_cells": 600,
-          "median_ms": 0.8102910360321403,
+          "median_ms": 0.8164169266819954,
           "samples_ms": [
-            0.853082980029285,
-            0.8885830175131559,
-            0.8102910360321403,
-            0.8082080166786909,
-            0.8149170316755772,
-            0.8059999672695994,
-            0.8094169897958636
+            0.7969579892233014,
+            0.8365839021280408,
+            0.7995000341907144,
+            0.8164169266819954,
+            0.8265830110758543,
+            0.8330839918926358,
+            0.7926669204607606
           ]
         },
         {
@@ -40,15 +40,15 @@
           "predicate_comparisons": 0,
           "rows_returned": 600,
           "output_cells": 600,
-          "median_ms": 0.8098749676719308,
+          "median_ms": 0.7871250854805112,
           "samples_ms": [
-            0.7878750329837203,
-            0.8341670036315918,
-            0.789875048212707,
-            0.9292910108342767,
-            0.8098749676719308,
-            0.8130419300869107,
-            0.7809160742908716
+            0.8765000384300947,
+            0.8500829571858048,
+            0.7871250854805112,
+            0.7831250550225377,
+            0.7842079503461719,
+            0.7864170474931598,
+            0.7972089806571603
           ]
         }
       ]
@@ -67,15 +67,15 @@
           "predicate_comparisons": 600,
           "rows_returned": 120,
           "output_cells": 120,
-          "median_ms": 0.836916035041213,
+          "median_ms": 0.8224169723689556,
           "samples_ms": [
-            0.9535000426694751,
-            0.8201670134440064,
-            0.8212090469896793,
-            0.8162501035258174,
-            0.8384169777855277,
-            0.8422080427408218,
-            0.836916035041213
+            0.8224169723689556,
+            0.8250419050455093,
+            0.8165830513462424,
+            0.8184169419109821,
+            0.835041981190443,
+            0.8369579445570707,
+            0.8165410254150629
           ]
         },
         {
@@ -88,15 +88,15 @@
           "predicate_comparisons": 600,
           "rows_returned": 120,
           "output_cells": 120,
-          "median_ms": 0.854124897159636,
+          "median_ms": 0.8297089952975512,
           "samples_ms": [
-            0.8607920026406646,
-            0.8288340177386999,
-            0.854124897159636,
-            0.8267499506473541,
-            0.9322910336777568,
-            0.8876658976078033,
-            0.8210829691961408
+            0.8272089762613177,
+            0.8414589101448655,
+            0.8211659733206034,
+            0.830666976980865,
+            0.8207500213757157,
+            0.861792010255158,
+            0.8297089952975512
           ]
         }
       ]
@@ -115,15 +115,15 @@
           "predicate_comparisons": 600,
           "rows_returned": 120,
           "output_cells": 480,
-          "median_ms": 1.0875000152736902,
+          "median_ms": 1.0832090629264712,
           "samples_ms": [
-            1.0875000152736902,
-            1.0830831015482545,
-            1.087334007024765,
-            1.1008750880137086,
-            1.0727080516517162,
-            1.0988749563694,
-            1.1294999858364463
+            1.0846670484170318,
+            1.0832090629264712,
+            1.0924170492216945,
+            1.1094590881839395,
+            1.0732910595834255,
+            1.0801670141518116,
+            1.0726249311119318
           ]
         },
         {
@@ -136,165 +136,165 @@
           "predicate_comparisons": 600,
           "rows_returned": 120,
           "output_cells": 480,
-          "median_ms": 1.0964159155264497,
+          "median_ms": 1.1029590386897326,
           "samples_ms": [
-            1.0964159155264497,
-            1.198250101879239,
-            1.0756669798865914,
-            1.0870000114664435,
-            1.111124991439283,
-            1.1560410493984818,
-            1.0953749297186732
+            1.1227090144529939,
+            1.2604580260813236,
+            1.0941249784082174,
+            1.1029590386897326,
+            1.08916696626693,
+            1.1078329989686608,
+            1.081207999959588
           ]
         }
       ]
     },
     {
-      "sql": "SELECT name, dept FROM students, majors WHERE gpa > 35 AND dept = 'ds'",
+      "sql": "SELECT name, dept FROM students, majors\nWHERE gpa > 35 AND dept = 'ds' AND mid = mid2",
       "same_results": true,
       "measurements": [
         {
           "mode": "simple",
-          "plan": "ProjectScan['name', 'dept']\n  SelectScan[gpa > 35 AND dept = 'ds']\n    ProductScan\n      TableScan(students)\n      TableScan(majors)",
+          "plan": "ProjectScan['name', 'dept']\n  SelectScan[gpa > 35 AND dept = 'ds' AND mid = mid2]\n    ProductScan\n      TableScan(students)\n      TableScan(majors)",
           "table_row_visits": {
             "students": 600,
             "majors": 1800
           },
           "candidate_pairs": 1800,
-          "predicate_comparisons": 2160,
-          "rows_returned": 120,
-          "output_cells": 240,
-          "median_ms": 22.78970810584724,
+          "predicate_comparisons": 2280,
+          "rows_returned": 40,
+          "output_cells": 80,
+          "median_ms": 22.79541699681431,
           "samples_ms": [
-            22.97175000421703,
-            22.663000039756298,
-            22.816707962192595,
-            22.76829199399799,
-            22.857749951072037,
-            22.78970810584724,
-            22.752166958525777
+            23.338291910476983,
+            22.705208975821733,
+            22.88804203271866,
+            22.667999961413443,
+            22.79541699681431,
+            22.73116703145206,
+            22.853249916806817
           ]
         },
         {
           "mode": "early-filter",
-          "plan": "ProjectScan['name', 'dept']\n  ProductScan\n    SelectScan[gpa > 35]\n      TableScan(students)\n    SelectScan[dept = 'ds']\n      TableScan(majors)",
+          "plan": "ProjectScan['name', 'dept']\n  SelectScan[mid = mid2]\n    ProductScan\n      SelectScan[gpa > 35]\n        TableScan(students)\n      SelectScan[dept = 'ds']\n        TableScan(majors)",
           "table_row_visits": {
             "students": 600,
             "majors": 360
           },
           "candidate_pairs": 120,
-          "predicate_comparisons": 960,
-          "rows_returned": 120,
-          "output_cells": 240,
-          "median_ms": 5.3978749783709645,
+          "predicate_comparisons": 1080,
+          "rows_returned": 40,
+          "output_cells": 80,
+          "median_ms": 5.436834064312279,
           "samples_ms": [
-            5.398457986302674,
-            5.418542074039578,
-            5.407250020653009,
-            5.380999995395541,
-            5.357625079341233,
-            5.3978749783709645,
-            5.377457942813635
+            5.43525000102818,
+            5.567374988459051,
+            5.456707905977964,
+            5.40554104372859,
+            5.436834064312279,
+            5.426290910691023,
+            5.4717500461265445
           ]
         }
       ]
     },
     {
-      "sql": "SELECT name, dept FROM majors, students WHERE gpa > 35 AND dept = 'ds'",
+      "sql": "SELECT name, dept FROM majors, students\nWHERE gpa > 35 AND dept = 'ds' AND mid2 = mid",
       "same_results": true,
       "measurements": [
         {
           "mode": "simple",
-          "plan": "ProjectScan['name', 'dept']\n  SelectScan[gpa > 35 AND dept = 'ds']\n    ProductScan\n      TableScan(majors)\n      TableScan(students)",
+          "plan": "ProjectScan['name', 'dept']\n  SelectScan[gpa > 35 AND dept = 'ds' AND mid2 = mid]\n    ProductScan\n      TableScan(majors)\n      TableScan(students)",
           "table_row_visits": {
             "majors": 3,
             "students": 1800
           },
           "candidate_pairs": 1800,
-          "predicate_comparisons": 2160,
-          "rows_returned": 120,
-          "output_cells": 240,
-          "median_ms": 3.186957910656929,
+          "predicate_comparisons": 2280,
+          "rows_returned": 40,
+          "output_cells": 80,
+          "median_ms": 3.217332996428013,
           "samples_ms": [
-            3.200499922968447,
-            3.1936250161379576,
-            3.165208036080003,
-            3.186957910656929,
-            3.18470795173198,
-            3.1893750419840217,
-            3.1751670176163316
+            3.217332996428013,
+            3.321042051538825,
+            3.3136659767478704,
+            3.1929999822750688,
+            3.2436669571325183,
+            3.196583013050258,
+            3.183875000104308
           ]
         },
         {
           "mode": "early-filter",
-          "plan": "ProjectScan['name', 'dept']\n  ProductScan\n    SelectScan[dept = 'ds']\n      TableScan(majors)\n    SelectScan[gpa > 35]\n      TableScan(students)",
+          "plan": "ProjectScan['name', 'dept']\n  SelectScan[mid2 = mid]\n    ProductScan\n      SelectScan[dept = 'ds']\n        TableScan(majors)\n      SelectScan[gpa > 35]\n        TableScan(students)",
           "table_row_visits": {
             "majors": 3,
             "students": 600
           },
           "candidate_pairs": 120,
-          "predicate_comparisons": 603,
-          "rows_returned": 120,
-          "output_cells": 240,
-          "median_ms": 1.0535409674048424,
+          "predicate_comparisons": 723,
+          "rows_returned": 40,
+          "output_cells": 80,
+          "median_ms": 1.1174159590154886,
           "samples_ms": [
-            1.056874985806644,
-            1.054291962645948,
-            1.0535409674048424,
-            1.0532919550314546,
-            1.0418749880045652,
-            1.0397910373285413,
-            1.0875000152736902
+            1.0971659794449806,
+            1.1062920093536377,
+            1.1186249321326613,
+            1.1175828985869884,
+            1.1196660343557596,
+            1.0944169480353594,
+            1.1174159590154886
           ]
         }
       ]
     },
     {
-      "sql": "SELECT name, dept FROM students, majors WHERE gpa > 38 AND dept = 'ds'",
+      "sql": "SELECT name, dept FROM students, majors\nWHERE gpa > 38 AND dept = 'ds' AND mid = mid2",
       "same_results": true,
       "measurements": [
         {
           "mode": "simple",
-          "plan": "ProjectScan['name', 'dept']\n  SelectScan[gpa > 38 AND dept = 'ds']\n    ProductScan\n      TableScan(students)\n      TableScan(majors)",
+          "plan": "ProjectScan['name', 'dept']\n  SelectScan[gpa > 38 AND dept = 'ds' AND mid = mid2]\n    ProductScan\n      TableScan(students)\n      TableScan(majors)",
           "table_row_visits": {
             "students": 600,
             "majors": 1800
           },
           "candidate_pairs": 1800,
-          "predicate_comparisons": 1890,
-          "rows_returned": 30,
-          "output_cells": 60,
-          "median_ms": 22.226417087949812,
+          "predicate_comparisons": 1920,
+          "rows_returned": 10,
+          "output_cells": 20,
+          "median_ms": 22.251165937632322,
           "samples_ms": [
-            22.226417087949812,
-            22.130041965283453,
-            22.14541705325246,
-            22.12354203220457,
-            22.541917045600712,
-            23.289416916668415,
-            22.927209036424756
+            22.268957924097776,
+            22.11766701657325,
+            22.183208027854562,
+            22.85954204853624,
+            22.240874939598143,
+            22.251165937632322,
+            22.752041928470135
           ]
         },
         {
           "mode": "early-filter",
-          "plan": "ProjectScan['name', 'dept']\n  ProductScan\n    SelectScan[gpa > 38]\n      TableScan(students)\n    SelectScan[dept = 'ds']\n      TableScan(majors)",
+          "plan": "ProjectScan['name', 'dept']\n  SelectScan[mid = mid2]\n    ProductScan\n      SelectScan[gpa > 38]\n        TableScan(students)\n      SelectScan[dept = 'ds']\n        TableScan(majors)",
           "table_row_visits": {
             "students": 600,
             "majors": 90
           },
           "candidate_pairs": 30,
-          "predicate_comparisons": 690,
-          "rows_returned": 30,
-          "output_cells": 60,
-          "median_ms": 1.9033750286325812,
+          "predicate_comparisons": 720,
+          "rows_returned": 10,
+          "output_cells": 20,
+          "median_ms": 1.9377919379621744,
           "samples_ms": [
-            1.918500056490302,
-            1.892375061288476,
-            1.9033750286325812,
-            1.9154999172315001,
-            1.8912499072030187,
-            1.9097080221399665,
-            1.8930420046672225
+            1.952500082552433,
+            1.9082919461652637,
+            1.9612920004874468,
+            1.9377919379621744,
+            1.9282499561086297,
+            1.9265409791842103,
+            2.0702920155599713
           ]
         }
       ]
