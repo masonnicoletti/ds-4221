@@ -90,8 +90,14 @@ class BPlusTree:
 
         Sketch: _descend to the leaf; find the key in leaf.keys (list.index
         or a loop); return a COPY of its rid list."""
-        # TODO
-        raise NotImplementedError
+        path = self._descend(key)
+        leaf = path[-1]
+        try:
+            idx = leaf.keys.index(key)
+            return leaf.rids[idx].copy()
+        except ValueError:
+            return []
+
 
     def insert(self, key, rid) -> None:
         """Insert (key, rid) at the right spot in the right leaf, keeping
@@ -103,9 +109,23 @@ class BPlusTree:
         while the deepest overfull node exists, _split it into its parent
         (path[-2], or a brand-new root if it WAS the root)."""
         # TODO
-        raise NotImplementedError
+        import bisect
+        path = self._descend(key)
+        leaf = path[-1]
 
-    def _split(self, node: Node, parent: Node | None) -> None:
+        i = bisect.bisect_left(leaf.keys, key)
+        if i < len(leaf.keys) and leaf.keys[i] == key:
+            leaf.rids[i].append(rid)
+        else:
+            leaf.keys.insert(i, key)
+            leaf.rids.insert(i, [rid])
+        level = len(path) - 1
+        while level >= 0 and path[level].is_full():
+            parent = path[level - 1] if level > 0 else None
+            self._split(path[level], parent)
+            level -= 1
+
+    def _split(self, node: 'Node', parent: 'Node | None') -> None:
         """Split an overfull `node`, hoisting its middle key into `parent`.
 
         mid = len(keys) // 2. Leaf split: right sibling takes keys[mid:]
@@ -115,16 +135,54 @@ class BPlusTree:
         children; the middle key MOVES up (internal keys are only guides).
         No parent? Make a new internal root holding just the hoisted key
         and the two halves, and bump self.height."""
-        # TODO
-        raise NotImplementedError
+        mid = len(node.keys) // 2
+        promoted_key = node.keys[mid]
+        right = Node(leaf=node.leaf)
+
+        if node.leaf:
+            right.keys = node.keys[mid:]
+            right.rids = node.rids[mid:]
+            right.next = node.next
+            node.keys = node.keys[:mid]
+            node.rids = node.rids[:mid]
+            node.next = right
+        else:
+            right.keys = node.keys[mid + 1:]
+            right.children = node.children[mid + 1:]
+            node.keys = node.keys[:mid]
+            node.children = node.children[:mid + 1]
+
+        if parent is None:
+            self.root = Node(leaf=False)
+            self.root.keys = [promoted_key]
+            self.root.children = [node, right]
+            self.height += 1
+        else:
+            pos = parent.children.index(node)
+            parent.keys.insert(pos, promoted_key)
+            parent.children.insert(pos + 1, right)
 
     def range(self, lo, hi) -> list:
         """All RIDs with lo <= key <= hi, in key order.
 
         Sketch: _descend to lo's leaf, then walk rightward — through the
         leaf and across .next links — collecting until a key exceeds hi."""
-        # TODO
-        raise NotImplementedError
+        path = self._descend(lo)
+        node = path[-1]
+
+        rids = []
+        while node is not None:
+            for k, rid in zip(node.keys, node.rids):
+                if k > hi:
+                    return rids
+                if k >= lo:
+                    if isinstance(rid, list):
+                        rids.extend(rid)
+                    else:
+                        rids.append(rid)
+            node = node.next
+        return rids
+   
 
     # ---------------- YOUR JOB ends here. ----------------
 
