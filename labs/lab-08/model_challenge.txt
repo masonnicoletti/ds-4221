@@ -3,42 +3,66 @@ LAB 8, PROBLEM 2: IMPROVE FARE PREDICTIONS FOR RIDES OF FIVE MILES OR MORE
 Submit this completed file with pytorch_fares.py and fare-models.png from your
 chosen trial, plus plan_mapping.txt from Problem 1. Upload all four to Lab 8.
 
-Name:
+Name: Mason Nicoletti
 
 Use the "0. All rides >= 5 miles" row from five-plus.csv.
 MAE is in dollars; smaller is better. Keep at least four decimal places.
 
 UNCHANGED STARTER (run before editing pytorch_fares.py)
-Command:
-Number of 5+ mile benchmark rides:
-Linear-model MAE:
-Starter neural-network MAE:
+Command: python pytorch_fares.py --output data/pytorch-baseline
+Number of 5+ mile benchmark rides: 1649
+Linear-model MAE: 6.7777
+Starter neural-network MAE: 6.2308
 
 TRIAL 1
-What I changed in fit() or the training options, and why:
-Command (include epochs, batch size, and output folder):
-Number of 5+ mile benchmark rides:
-Linear-model MAE (should be unchanged):
-Changed neural-network MAE:
+What I changed in fit() or the training options, and why: 
+    I used a larger learning rate and decreased epochs. 
+        Learning rate = 0.1
+        Epochs = 10
+    These changes are intended to create an efficient, quick learning model and see if strong performance is maintained.
+Command (include epochs, batch size, and output folder): 
+    python pytorch_fares.py --epochs 10 --output data/pytorch-trial-1
+    python explore_predictions.py --query five_plus.sql --predictions data/pytorch-trial-1/predictions.csv --output data/pytorch-trial-1/five-plus.csv
+Number of 5+ mile benchmark rides: 1649
+Linear-model MAE (should be unchanged): 6.7777
+Changed neural-network MAE: 6.3035
 
 TRIAL 2
 What I changed from trial 1 and why:
-Command (include epochs, batch size, and output folder):
-Number of 5+ mile benchmark rides:
-Linear-model MAE (should be unchanged):
-Changed neural-network MAE:
+    In contrast with the previous trial, I used a small learning rate and increased epochs.
+        Learning rate = 1e-3
+        Epochs = 100
+    These changes are meant to contrast with the previous trial and experiment with a cautious, slower-learning model and evaluate whether it has stronger predictive power.
+Command (include epochs, batch size, and output folder): 
+    python pytorch_fares.py --epochs 100 --output data/pytorch-trial-2
+    python explore_predictions.py --query five_plus.sql --predictions data/pytorch-trial-2/predictions.csv --output data/pytorch-trial-2/five-plus.csv
+Number of 5+ mile benchmark rides: 1649
+Linear-model MAE (should be unchanged): 6.7777
+Changed neural-network MAE: 6.3613
 
 MY SUBMITTED MODEL
 Which trial matches my submitted pytorch_fares.py and fare-models.png?
+    TRIAL 2
 Exact command to reproduce that run:
+    python pytorch_fares.py --epochs 100 --output data/pytorch-trial-2
+    python explore_predictions.py --query five_plus.sql --predictions data/pytorch-trial-2/predictions.csv --output data/pytorch-trial-2/five-plus.csv
 Improvement over the linear model (linear MAE minus my model's MAE):
+    0.4164
 Improvement over the starter network (starter MAE minus my model's MAE):
+    -0.1305
 Are both improvements positive using the unrounded results? Yes / No
+    No
 
 Paste the THREE rows from this run's five-plus.csv here:
+0. All rides >= 5 miles,1649,6.777703433388904,6.361269872884018,0.41643356050488656
+1. 5 to under 10 miles,812,4.749911695207839,4.737260319376224,0.012651375831614686
+2. 10 miles or more,837,8.744927915351873,7.9367725699548926,0.8081553453969805
 
 In 2-3 sentences: Which distance group improved? Did another group get worse?
 What did your two trials teach you about the model?
+The distance group of 10 miles or more improved the most. 
+This makes sense because a neural network is not constrained to linear relationships that would inhibit a linear model's accuracy given larger distances.
+Both of my trials performed worse than the starter model, which reminded me of the lesson that it is important to optimize hyperparameters to achieve the best model.
 
 FAIR COMPARISON CHECK
 [ ] Only distance is a model input; fare is the target.
@@ -50,3 +74,6 @@ FAIR COMPARISON CHECK
 
 These benchmark rides helped me choose my model. Why does that mean I still
 need new, untouched rides to assess performance on future trips?
+This unseen data is used to test the model's performance. 
+It is not appropriate to test a model's performance based on the data it was trained on. 
+It is important to see how the final model responds to new data in order to record its test accuracy.

@@ -57,7 +57,7 @@ def fit(con, stats, epochs, batch_size):
     torch.set_num_threads(1)
     # One input, 16 hidden units, one output. ReLU lets the fitted curve bend.
     model = nn.Sequential(nn.Linear(1, 16), nn.ReLU(), nn.Linear(16, 1))
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
     loss_fn = nn.MSELoss()
     history = []
     model.train()
