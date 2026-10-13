@@ -1,0 +1,6 @@
+# Lab 8: DuckDB to microdb operator matching
+format=lab08-plan-mapping-v1
+SEQ_SCAN=TableScan
+FILTERS=SelectScan
+PROJECTION=ProjectScan
+CROSS_PRODUCT=ProductScan
