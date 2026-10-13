@@ -1,0 +1,52 @@
+LAB 8, PROBLEM 2: IMPROVE FARE PREDICTIONS FOR RIDES OF FIVE MILES OR MORE
+
+Submit this completed file with pytorch_fares.py and fare-models.png from your
+chosen trial, plus plan_mapping.txt from Problem 1. Upload all four to Lab 8.
+
+Name:
+
+Use the "0. All rides >= 5 miles" row from five-plus.csv.
+MAE is in dollars; smaller is better. Keep at least four decimal places.
+
+UNCHANGED STARTER (run before editing pytorch_fares.py)
+Command:
+Number of 5+ mile benchmark rides:
+Linear-model MAE:
+Starter neural-network MAE:
+
+TRIAL 1
+What I changed in fit() or the training options, and why:
+Command (include epochs, batch size, and output folder):
+Number of 5+ mile benchmark rides:
+Linear-model MAE (should be unchanged):
+Changed neural-network MAE:
+
+TRIAL 2
+What I changed from trial 1 and why:
+Command (include epochs, batch size, and output folder):
+Number of 5+ mile benchmark rides:
+Linear-model MAE (should be unchanged):
+Changed neural-network MAE:
+
+MY SUBMITTED MODEL
+Which trial matches my submitted pytorch_fares.py and fare-models.png?
+Exact command to reproduce that run:
+Improvement over the linear model (linear MAE minus my model's MAE):
+Improvement over the starter network (starter MAE minus my model's MAE):
+Are both improvements positive using the unrounded results? Yes / No
+
+Paste the THREE rows from this run's five-plus.csv here:
+
+In 2-3 sentences: Which distance group improved? Did another group get worse?
+What did your two trials teach you about the model?
+
+FAIR COMPARISON CHECK
+[ ] Only distance is a model input; fare is the target.
+[ ] January-October rides supply all training and scaling values.
+[ ] Every run scores the same November-December rides; no difficult rows removed.
+[ ] The linear model, seed 6042, nn.MSELoss(), and scoring code are unchanged.
+[ ] I changed the network or training settings, not the predictions or metrics.
+[ ] My script and chart come from the trial identified above.
+
+These benchmark rides helped me choose my model. Why does that mean I still
+need new, untouched rides to assess performance on future trips?

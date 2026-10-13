@@ -1,0 +1,40 @@
+Lab 8: Can distance predict a taxi fare?
+OPTIONAL EXPLORATION NOTES. Keep this file locally; it is not a submission.
+Required uploads: plan_mapping.txt, pytorch_fares.py, model_challenge.txt,
+and fare-models.png. See the lab's "What to submit" section.
+Name:
+
+1. Reproduce the baseline run
+Command, Python/package versions, epochs, and batch size:
+Training period and number of rides:
+Test period and number of rides:
+Straight-line test MAE and RMSE (dollars):
+Neural-network test MAE and RMSE (dollars):
+Why must test fares stay out of training and scaling?
+
+2. Explain the SQL warm-up and the system
+In the six-ride SQL example, what changes if only a test fare changes?
+Which work does DuckDB do? Which work does PyTorch do?
+What does Arrow carry, and how does SQL call the frozen network?
+
+3. Ask a discovery question before changing investigation.sql
+My question about payment type, pickup borough, trip distance, or another group:
+My prediction before running the query:
+Which tables and join keys does my query use?
+
+4. Interpret the evidence
+Keep investigation.sql and its query-results.csv with your local notes.
+Describe at least two groups: their sample sizes and each model's MAE.
+Where does the network help? Where does it fail to help?
+What does one feature (distance) leave out that might matter?
+Give one limitation and one follow-up query. A pattern is not proof of a cause.
+
+5. Read the chart
+Use your run's fare-models.png for the answers below. For the required model
+challenge, submit the chart from your chosen trial with the other three files.
+Explain one feature of the training curve, one of the test scatter plot,
+and one of the grouped-error bars. Is lower training error enough to
+conclude that the model predicts later rides better? Why?
+
+These questions support optional exploration. The required tuning challenge
+and submission checklist are described in Problems 1 and 2 on the lab page.

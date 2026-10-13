@@ -1,0 +1,6 @@
+# Lab 8 core environment: local DuckDB + PyTorch on a CPU.
+duckdb>=1.5,<2
+torch>=2.2,<3
+pyarrow>=14
+numpy>=1.26
+matplotlib>=3.8
