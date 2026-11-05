@@ -66,8 +66,9 @@ class BruteForceIndex:
         Sketch: score every vector with dot(query, v) (count each in
         self.comparisons); keep the top k. heapq.nlargest does the
         keeping; sort order is (similarity desc, id asc) for determinism."""
-        # TODO
-        raise NotImplementedError
+        scored = [(dot(query, v), i) for i, v in enumerate(self.vectors)]
+        self.comparisons += len(self.vectors)
+        return heapq.nlargest(k, scored, key=lambda pair: (pair[0], -pair[1]))
 
     # ---------------- YOUR JOB ends here. ----------------
 
@@ -112,8 +113,10 @@ class IVFIndex:
 
         Sketch: for each vector i, find the centroid c maximizing
         dot(vectors[i], centroids[c]) and append i to self.lists[c]."""
-        # TODO
-        raise NotImplementedError
+        for i, v in enumerate(self.vectors):
+            best = max(range(len(self.centroids)),
+                       key=lambda c: (dot(v, self.centroids[c]), -c))
+            self.lists[best].append(i)
 
     def search(self, query: list[float], k: int,
                probe: int = 1) -> list[tuple[float, int]]:
@@ -124,8 +127,15 @@ class IVFIndex:
         dot against a candidate vector - the measurement compares this
         number to brute force's. Return (similarity, id) pairs, best
         first, ties by id."""
-        # TODO
-        raise NotImplementedError
+        nearest = sorted(
+            range(len(self.centroids)),
+            key=lambda c: (-dot(query, self.centroids[c]), c),
+        )[:probe]
+        self.comparisons += len(self.centroids)
+        ids = [i for c in nearest for i in self.lists[c]]
+        scored = [(dot(query, self.vectors[i]), i) for i in ids]
+        self.comparisons += len(ids)
+        return heapq.nlargest(k, scored, key=lambda pair: (pair[0], -pair[1]))
 
     # ---------------- YOUR JOB ends here. ----------------
 
