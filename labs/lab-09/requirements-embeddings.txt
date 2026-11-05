@@ -1,0 +1,11 @@
+# Local embedding extension only. The index exercise remains standard-library Python.
+# Verified 2026-10-29 with Python 3.13, CPU float32, and PyTorch 2.15.0.
+sentence-transformers==6.2.0
+transformers==5.21.1
+torch
+torchvision
+numpy
+pillow
+librosa
+soundfile
+av

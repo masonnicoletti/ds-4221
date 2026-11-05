@@ -1,5 +1,6 @@
 # Ignore virtual environment
 .venv/
+labs/lab-09/.venv-embeddings/
 
 # Ignore __pycache__
 __pycache__/
