@@ -98,8 +98,9 @@ class Retriever:
         # Embed every chunk's text and build a BruteForceIndex over the
         # vectors (store it as self.index). Keep the order aligned:
         # index id i must correspond to self.chunks[i].
-        raise NotImplementedError
-
+        self.chunks = chunks
+        self.index = BruteForceIndex([embed(c["text"]) for c in chunks])
+        
     def retrieve(self, question: str, k: int = 3) -> list[dict]:
         """The k best chunks for the question, each as
         {"doc", "title", "text", "score"} — score is the similarity,
@@ -107,8 +108,14 @@ class Retriever:
 
         Sketch: embed the question; self.index.search(qv, k); attach
         scores to copies of the matching chunk dicts."""
-        # TODO
-        raise NotImplementedError
+        qv = embed(question)
+        results = self.index.search(qv, k)   # [(score, id), ...] best-first
+        hits = []
+        for score, i in results:
+            hit = dict(self.chunks[i])       # copy, so stored chunks stay unmutated
+            hit["score"] = score
+            hits.append(hit)
+        return hits
 
     # ---------------- YOUR JOB ends here (class). ----------------
 
@@ -128,9 +135,12 @@ def build_prompt(question: str, retrieved: list[dict]) -> str:
 
     One line per retrieved chunk: "[" + doc + "] " + title + ": " + text.
     Blank lines between the header, sources, and question sections."""
-    # TODO
-    raise NotImplementedError
-
+    header = "Answer using ONLY the sources below. Cite as [doc_id]."
+    sources = "\n".join(
+        f"[{chunk['doc']}] {chunk['title']}: {chunk['text']}"
+        for chunk in retrieved
+    )
+    return f"{header}\n\n{sources}\n\nQuestion: {question}"
 
 # ------------------------------------------------- provided: generation
 
