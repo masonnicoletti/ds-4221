@@ -1,0 +1,4 @@
+ray[data]==2.60.0
+numpy
+pillow
+typing_extensions
