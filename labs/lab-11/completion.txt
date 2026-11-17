@@ -1,0 +1,30 @@
+Lab-11
+
+Task: 
+Generate a summary statistics report for a list of integers.
+
+Input: 
+List of randomly generated integers ranging from 0 - 100, list size ranging from 1 - 20.
+
+Assignment review:
+I came up with the task of generated a summary statistic report based on random lists of integers. 
+Most of the code was copied from stage1_tasks.py. I used the Ray framework provided, and updated code relevant to the task.
+I completed most of the code independently, though Cursor helped revise to ensure that each list was processed individually as a sample.
+I learned how Ray is a framework that runs tasks in parallel in order to distribute compute resources for efficiency. This implementation was simple but useful to deal with hands on.
+
+Run Command: 
+python3 my_ray_task.py 
+
+Output (Example):
+Summary Statistics:
+mean: 62.0
+std: 9.0
+min: 53
+max: 71
+sum: 124
+count: 2
+
+[5 total Summary Statistic reports generated]
+
+Processed 8 images in 2.12 seconds.
+
